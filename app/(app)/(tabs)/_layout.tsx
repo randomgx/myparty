@@ -11,6 +11,7 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useAuth } from "../../../contexts/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Text } from "../../../components/Themed";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -25,7 +26,8 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const router = useRouter();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  const isPrestador = user?.account_type === "provedor";
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -39,32 +41,41 @@ export default function TabLayout() {
           options={{
             title: "MyParty",
             tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-            headerRight: () => (
-              <Link href="/(app)/profile" replace>
-                <Pressable>
-                  {({ pressed }) => (
-                    <FontAwesome
-                      name="sign-out"
-                      size={25}
-                      color={Colors[colorScheme ?? "light"].text}
-                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                    />
-                  )}
-                </Pressable>
-              </Link>
+            headerRight: () =>
+              !isPrestador ? (
+                <TouchableOpacity
+                  onPress={() => router.push("/(app)/newevent")}
+                >
+                  <Pressable>
+                    {({ pressed }) => (
+                      <FontAwesome
+                        name="plus-square-o"
+                        size={25}
+                        color={Colors[colorScheme ?? "light"].text}
+                        style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                      />
+                    )}
+                  </Pressable>
+                </TouchableOpacity>
+              ) : null,
+          }}
+        />
+        <Tabs.Screen
+          name="providerServices"
+          options={{
+            href: isPrestador ? "/(app)/(tabs)/providerServices" : null,
+            headerShown: false,
+            title: "Serviços",
+            tabBarIcon: ({ color }) => (
+              <TabBarIcon name="truck" color={color} />
             ),
           }}
         />
         <Tabs.Screen
-          name="newevent"
+          name="clientEvents"
           options={{
-            title: "Criar Evento",
-            tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="events"
-          options={{
+            href: !isPrestador ? "/(app)/(tabs)/clientEvents" : null,
+            headerShown: false,
             title: "Meus Eventos",
             tabBarIcon: ({ color }) => (
               <TabBarIcon name="glass" color={color} />
@@ -72,11 +83,32 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="financeiro"
+          name="providerEvents"
           options={{
-            title: "Finanças",
+            href: isPrestador ? "/(app)/(tabs)/providerEvents" : null,
+            headerShown: false,
+            title: "Eventos",
             tabBarIcon: ({ color }) => (
-              <TabBarIcon name="money" color={color} />
+              <TabBarIcon name="glass" color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="agenda"
+          options={{
+            title: "Agenda",
+            href: isPrestador ? "/(app)/(tabs)/agenda" : null,
+            tabBarIcon: ({ color }) => (
+              <TabBarIcon name="calendar-o" color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Perfil",
+            tabBarIcon: ({ color }) => (
+              <TabBarIcon name="user-circle" color={color} />
             ),
           }}
         />

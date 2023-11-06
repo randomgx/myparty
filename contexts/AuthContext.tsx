@@ -4,6 +4,7 @@ import { useContext, useEffect, useState, createContext } from "react";
 import { AuthSession } from "@supabase/supabase-js";
 import { useRouter, useSegments, useRootNavigationState } from "expo-router";
 import { supabase } from "../lib/supabase";
+import { User } from "../types/collections";
 
 interface Props {
   children?: React.ReactNode;
@@ -11,6 +12,7 @@ interface Props {
 
 export interface AuthContextType {
   session: AuthSession | null | undefined;
+  user: User | null | undefined;
   signOut: () => Promise<void>;
   authInitialized: boolean;
 }
@@ -19,6 +21,7 @@ export const AuthContext = createContext<AuthContextType>({
   session: null,
   signOut: async () => {},
   authInitialized: false,
+  user: null,
 });
 
 export function AuthProvider({ children }: Props) {
@@ -27,6 +30,7 @@ export function AuthProvider({ children }: Props) {
 
   const [session, setSession] = useState<AuthSession | null>(null);
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const navigationState = useRootNavigationState();
 
@@ -42,7 +46,7 @@ export function AuthProvider({ children }: Props) {
       router.replace("/(auth)/login");
     } else if (session?.user && inAuthGroup) {
       // Redirect away from the sign-in page.
-      router.replace("/(app)/"); // to tabs
+      router.replace("/(app)/(tabs)"); // to tabs
     }
   }, [session, segments, authInitialized, navigationState?.key]);
 
@@ -51,11 +55,30 @@ export function AuthProvider({ children }: Props) {
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+
+      supabase
+        .from("users")
+        .select("*")
+        .eq("id", session?.user?.id)
+        .single()
+        .then(({ data }) => {
+          setUser(data);
+        });
     });
 
     const { data: authListner } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
+
+        supabase
+          .from("users")
+          .select("*")
+          .eq("id", session?.user?.id)
+          .single()
+          .then(({ data }) => {
+            setUser(data);
+          });
+
         setAuthInitialized(true);
 
         if (_event == "TOKEN_REFRESHED") {
@@ -78,6 +101,7 @@ export function AuthProvider({ children }: Props) {
     session,
     signOut,
     authInitialized,
+    user,
   };
 
   return (

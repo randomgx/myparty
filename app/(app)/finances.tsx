@@ -4,7 +4,7 @@ import { Text, View } from "../../components/Themed";
 export default function FinanceiroScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
+      <Text style={styles.title}>Tab Two</Text>
       <View
         style={styles.separator}
         lightColor="#eee"

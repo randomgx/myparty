@@ -3,10 +3,10 @@ import { StyleSheet } from "react-native";
 import EditScreenInfo from "../../../components/EditScreenInfo";
 import { Text, View } from "../../../components/Themed";
 
-export default function EventsScreen() {
+export default function AgendaScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>Agenda</Text>
       <View
         style={styles.separator}
         lightColor="#eee"

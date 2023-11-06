@@ -20,10 +20,11 @@ export default function AppLayout() {
 
   return (
     <>
-      <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false }}>
-        {/*<Stack.Screen name="(tabs)" />*/}
-        <Stack.Screen name="profile" />
+      <StatusBar style="auto" />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="newevent" options={{ title: "Novo Evento" }} />
+        <Stack.Screen name="selectProviders" options={{ headerShown: false }} />
       </Stack>
     </>
   );

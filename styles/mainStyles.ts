@@ -9,6 +9,14 @@ export const mainStyles = StyleSheet.create({
     color: "#fff",
     backgroundColor: "#2b045a",
   },
+  whiteTextBox: {
+    borderColor: "#d4d4d4",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 16,
+    color: "#000",
+    backgroundColor: "#fff",
+  },
 });
 
 export const titles = StyleSheet.create({
@@ -56,6 +64,8 @@ export const buttons = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+    display: "flex",
+    flexDirection: "row",
   },
   secondary: {
     backgroundColor: "#fff",
@@ -66,11 +76,23 @@ export const buttons = StyleSheet.create({
   },
   primaryText: {
     color: "#fff",
+    fontWeight: "bold",
   },
   secondaryText: {
     color: "#2b045a",
+    fontWeight: "bold",
   },
   stretch: {
     width: "100%",
+  },
+});
+
+export const containers = StyleSheet.create({
+  mainContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    gap: 20,
+    width: "100%",
+    height: "100%",
   },
 });
